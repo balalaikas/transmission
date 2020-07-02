@@ -2,14 +2,23 @@ version: '2'
 
 volumes:
   config:
+    driver: local
   torrents:
+    driver: local
   downloads:
+    driver: local
+  breath:
+    driver: local
+  vpn:
+    driver: local
 
 services:
 
- transmission-daemon:
+  daemon:
     container_name: transmission-daemon
     image: phlak/transmission
+    network_mode: host
+    restart: unless-stopped
     environment:
       - TZ=America/Phoenix
     ports:
@@ -19,3 +28,27 @@ services:
       - config:/etc/transmission-daemon
       - torrents:/srv/downloads
       - downloads:/vol/downloads
+    privileged: true
+
+  breath:
+    image: breath
+    network_mode: host
+    volumes:
+        - breath:/root/app
+    restart: unless-stopped
+    cap_add: [ NET_ADMIN ]
+    devices:
+        - /dev/net/tun:/dev/net/tun
+    privileged: true
+
+
+  vpn_client:
+    image: dperson/openvpn-client
+    restart: unless-stopped
+    network_mode: host
+    devices:
+        - /dev/net/tun:/dev/net/tun
+    volumes:
+        - vpn:/vpn
+    cap_add: [ NET_ADMIN ]
+    privileged: true
