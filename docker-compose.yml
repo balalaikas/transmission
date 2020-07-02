@@ -12,7 +12,7 @@ services:
     environment:
       - TZ=America/Phoenix
     ports:
-      - 1419:1419
+      - 9091:9091
     volumes:
       - config:/etc/transmission-daemon
       - torrents:/srv/downloads
