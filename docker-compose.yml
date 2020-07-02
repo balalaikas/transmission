@@ -1,0 +1,18 @@
+version: '2'
+
+volumes:
+  config:
+  torrents:
+
+services:
+
+ transmission-daemon:
+    container_name: transmission-daemon
+    image: phlak/transmission
+    environment:
+      - TZ=America/Phoenix
+    ports:
+      - 1419:1419
+    volumes:
+      - config:/etc/transmission-daemon
+      - torrents:/srv/downloads
